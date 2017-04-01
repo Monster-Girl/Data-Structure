@@ -114,23 +114,38 @@ public:
 				Node* del = cur;
 				if (cur->_left == NULL)
 				{
-					if (parent->_right == cur)
+					if (parent == NULL)
 					{
-						parent->_right = cur->_right;
+						_root = cur->_right;
 					}
-
 					else
-						parent->_left = cur->_right;
+					{
+						if (parent->_right == cur)
+						{
+							parent->_right = cur->_right;
+						}
+
+						else
+							parent->_left = cur->_right;
+					}
+					
 				}
 				else if (cur->_right == NULL)
 				{
-					if (parent->_left == cur)
+					if (parent == NULL)
 					{
-						parent->_left = cur->_left;
+						_root = cur->_left;
 					}
 					else
-						parent->_right = cur->_left;
+					{
+						if (parent->_left == cur)
+						{
+							parent->_left = cur->_left;
+						}
+						else
+							parent->_right = cur->_left;
 
+					}	
 				}
 
 				else   //Ìæ´ú·¨
@@ -157,6 +172,11 @@ public:
 		return false;
 	}
 
+	bool RemoveR(const K& key)
+	{
+		return _RemoveR(_root, key);
+	}
+
 protected:
 	bool _InsertR(Node*& root, const K& key)
 	{
@@ -177,6 +197,42 @@ protected:
 			return true;
 		}
 		return false;
+	}
+
+	bool _RemoveR(Node*& root, const K& key)
+	{
+		if (root == NULL) return false;
+		if (root->_key > key)
+			return _RemoveR(root->_left, key);
+		else if (root->_key < key)
+			return _RemoveR(root->_right, key);
+		else
+		{
+			Node* del = root;
+			if (root->_left == NULL)
+				root = root->_right;
+			else if (root->_right == NULL)
+				root = root->_left;
+			else
+			{
+				Node* subRight = root->_right;
+				Node* subParent = root;
+				while (subRight->_left)
+				{
+					subRight = subRight->_left;
+				}
+
+				root->_key = subRight->_key;
+				del = subRight;
+
+				if (subParent->_right == subRight)
+					subParent->_right = subRight->_right;
+				else
+					subParent->_left = subRight->_left;
+			}
+			delete del;
+			return true;
+		}
 	}
 
 	bool _FindR(Node* root, const K& key)
@@ -207,6 +263,30 @@ protected:
 		for (int i = 0; i < 10; i++)
 			bst2.InsertR(arr[i]);
 
+		bst1.Remove(0);
+		bst1.Remove(1);
+		bst1.Remove(2);
+		bst1.Remove(3);
+		bst1.Remove(4);
+		bst1.Remove(5);
+		bst1.Remove(6);
+		bst1.Remove(7);
+		bst1.Remove(8);
+		bst1.Remove(9);
+
+
+		bst2.RemoveR(0);
+		bst2.RemoveR(1);
+		bst2.RemoveR(2);
+		bst2.RemoveR(3);
+		bst2.RemoveR(4);
+		bst2.RemoveR(5);
+		bst2.RemoveR(6);
+		bst2.RemoveR(7);
+		bst2.RemoveR(8);
+		bst2.RemoveR(9);
+
+
 		/*cout << bst1.Find(0) << endl;
 		cout << bst1.Find(2) << endl;
 		cout << bst1.Find(4) << endl;
@@ -219,10 +299,10 @@ protected:
 		//bst1.Remove(9);
 		//bst1.Remove(5);
 
-		cout << bst1.FindR(0) << endl;
+		/*cout << bst1.FindR(0) << endl;
 		cout << bst1.FindR(2) << endl;
 		cout << bst1.FindR(4) << endl;
 		cout << bst1.FindR(6) << endl;
 		cout << bst1.FindR(9) << endl;
-		cout << bst1.FindR(10) << endl;
+		cout << bst1.FindR(10) << endl; */
 	}
