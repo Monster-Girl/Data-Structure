@@ -51,7 +51,7 @@ public:
 			Node* newNode = new Node;
 			size_t mid = M / 2;
 			size_t index = 0;
-			size_t i = 0;
+			size_t i = mid + 1;
 			for (; i < cur->_size; ++i)
 			{
 				newNode->_keys[index] = cur->_keys[i];
@@ -61,12 +61,15 @@ public:
 					cur->_subs[i]->_parent = newNode;
 
 				++index;
+				newNode->_size++;
 			}
-			newNode->_size++;
+			
+
 			newNode->_subs[index] = cur->_subs[i];  //处理最后一个节点
 			if (cur->_subs[i])
 				cur->_subs[i]->_parent = newNode;
 
+			cur->_size = cur->_size - newNode->_size - 1;
 			if (cur->_parent == NULL)  //处理根节点
 			{
 				_root = new Node;
@@ -91,10 +94,10 @@ public:
 	{
 		Node* cur = _root;
 		Node* parent = NULL;
-		while (cur)
+		while(cur)
 		{
 			size_t i = 0;
-			for (; i < cur->_size; i++)
+			for (; i < cur->_size;)
 			{
 				if (cur->_keys[i]>key)
 					break;
@@ -129,6 +132,24 @@ public:
 			sub->_parent = cur;
 		cur->_size++;
 	}
+	void InOrder()
+	{
+		_InOrder(_root);
+		cout << endl;
+	}
+
+	void _InOrder(Node* root)
+	{
+		if (root == NULL)
+			return;
+		size_t i = 0;
+		for (; i < root->_size; i++)
+		{
+			_InOrder(root->_subs[i]);
+			cout << root->_keys[i] << " ";
+		}
+		_InOrder(root->_subs[i]);
+	}
 
 protected:
 	Node* _root;
@@ -142,5 +163,5 @@ void TestBTree()
 	{
 		b1.Insert(a[i]);
 	}
-
+	b1.InOrder();
 }
