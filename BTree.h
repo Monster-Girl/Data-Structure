@@ -6,7 +6,7 @@ struct BTreeNode
 {
 	K _keys[M];  //多开一个，方便我们排序调整
 	BTreeNode<K, M>* _parent;
-	BTreeNode<K, M>* _subs[M - 1];
+	BTreeNode<K, M>* _subs[M + 1];
 	size_t _size;
 
 	BTreeNode()
@@ -76,6 +76,7 @@ public:
 				_root->_keys[0] = cur->_keys[mid];
 				_root->_subs[0] = cur;
 				cur->_parent = _root;
+				_root->_size = 1;
 				_root->_subs[1] = newNode;
 				newNode->_parent = _root;
 				return true;
@@ -99,7 +100,7 @@ public:
 			size_t i = 0;
 			for (; i < cur->_size;)
 			{
-				if (cur->_keys[i]>key)
+				if (cur->_keys[i] > key)
 					break;
 				else if (cur->_keys[i] < key)
 					++i;
